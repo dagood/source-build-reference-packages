@@ -1,13 +1,8 @@
 <Project>
 
-  <PropertyGroup>
-    <RestoreUsingNuGetTargets>false</RestoreUsingNuGetTargets>
-  </PropertyGroup>
-
   <ItemGroup>
-    <ProjectToBuild Include="$(RepoRoot)src/targetPacks/buildTargettingPackages.proj" />
-    <ProjectToBuild Include="$(RepoRoot)src/referencePackages/buildReferencePackages.proj" />
-    <ProjectToBuild Include="$(RepoRoot)src/publishPackages/publish.proj" />
+    <ProjectToBuild Include="$(RepoRoot)src\targetPacks\buildTargettingPackages.proj" />
+    <!-- <ProjectToBuild Include="$(RepoRoot)src\referencePackages\buildReferencePackages.proj" /> -->
   </ItemGroup>
 
 </Project>
