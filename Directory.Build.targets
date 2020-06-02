@@ -28,17 +28,20 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="ResolveIlToolPaths">
+  <Target Name="ResolveIlToolPaths"
+          DependsOnTargets="GetILToolPackageReferences">
+    <Error Condition="'@(_IlToolPackageReference)' == ''" Text="Package items '_IlToolPackageReference' were not created" />
+
     <ItemGroup>
-      <_IlasmPackageReference NativePath="$(NuGetPackageRoot)\%(Identity)\%(Version)\runtimes\$(MicrosoftNetCoreIlasmPackageRuntimeId)\native" />
-      <_IlasmSourceFiles Include="%(_IlasmPackageReference.NativePath)\**\*" />
+      <_IlToolPackageReference NativePath="$(NuGetPackageRoot)\%(Identity)\%(Version)\runtimes\$(MicrosoftNetCoreIlasmPackageRuntimeId)\native" />
+      <_IlasmSourceFiles Include="%(_IlToolPackageReference.NativePath)\**\*" />
     </ItemGroup>
 
-    <Error Condition="!Exists('%(_IlasmPackageReference.NativePath)')" Text="Package %(_IlasmPackageReference.Identity)\%(_IlasmPackageReference.Version) was not restored" />
+    <Error Condition="!Exists('%(_IlToolPackageReference.NativePath)')" Text="Package %(_IlToolPackageReference.Identity)\%(_IlToolPackageReference.Version) was not restored" />
 
     <PropertyGroup>
-      <IlasmDir Condition="'$(IlasmDir)' == '' and '%(_IlasmPackageReference.Identity)' == '$(MicrosoftNetCoreIlasmPackageName)'">%(_IlasmPackageReference.NativePath)/</IlasmDir>
-      <IldasmDir Condition="'$(IldasmDir)' == '' and '%(_IlasmPackageReference.Identity)' == '$(MicrosoftNetCoreIldasmPackageName)'">%(_IlasmPackageReference.NativePath)/</IldasmDir>
+      <IlasmDir Condition="'$(IlasmDir)' == '' and '%(_IlToolPackageReference.Identity)' == '$(MicrosoftNetCoreIlasmPackageName)'">%(_IlToolPackageReference.NativePath)/</IlasmDir>
+      <IldasmDir Condition="'$(IldasmDir)' == '' and '%(_IlToolPackageReference.Identity)' == '$(MicrosoftNetCoreIldasmPackageName)'">%(_IlToolPackageReference.NativePath)/</IldasmDir>
     </PropertyGroup>
   </Target>
 
