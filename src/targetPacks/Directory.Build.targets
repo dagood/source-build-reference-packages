@@ -18,7 +18,7 @@
       <ArtifactsTFMPackTemp>$(RepoRoot)artifacts/TFMPack/</ArtifactsTFMPackTemp>
     </PropertyGroup>
 
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Assemble TargetingPacks src $(MSBuildProjectName)..." />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Begin $(MSBuildProjectName) -> $(ArtifactsTFMPackTemp)$(MSBuildProjectName)..." />
     <MakeDir Directories="@(TargetingPackSrc->'$(ArtifactsTFMPackTemp)$(MSBuildProjectName)/%(RecursiveDir)')" />
 
     <ItemGroup>
@@ -35,7 +35,7 @@
       BuildInParallel="false"
       StopOnFirstFailure="true" />
 
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Assemble TargetingPacks src $(MSBuildProjectName)... DONE" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] $(MSBuildProjectName) -> $(ArtifactsTFMPackTemp)$(MSBuildProjectName) DONE" />
   </Target>
 
   <Target Name="BuildIlFile"
