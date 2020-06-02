@@ -1,62 +1,7 @@
 <Project>
 
-  <Target Name="GetTargetingPackSrc">
-    <ItemGroup>
-      <TargetingPackSrc Include="$(MSBuildProjectDirectory)/**/*.il" />
-      <!-- Temporarily move files with 'constraint' token that isn't compatible with current ilasm. -->
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)/**/System.Data.Common.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)/**/System.Reflection.Metadata.il" />
-    </ItemGroup>
-  </Target>
 
-  <Target Name="AssembleTargetPack"
-          Condition="'$(SkipTargetingPacks)' != 'true' "
-          DependsOnTargets="
-            GetTargetingPackSrc;
-            BuildTargetingPackIlSrc" />
-
-  <Target Name="BuildTargetingPackIlSrc"
-          Condition="'@(TargetingPackSrc)' != ''">
-    <PropertyGroup>
-      <ArtifactsTFMPackTemp>$(RepoRoot)artifacts/TFMPack/</ArtifactsTFMPackTemp>
-    </PropertyGroup>
-
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Begin $(MSBuildProjectName) -> $(ArtifactsTFMPackTemp)$(MSBuildProjectName)..." />
-    <MakeDir Directories="@(TargetingPackSrc->'$(ArtifactsTFMPackTemp)$(MSBuildProjectName)/%(RecursiveDir)')" />
-
-    <ItemGroup>
-      <IndividualFileProject
-        Include="$(MSBuildProjectFullPath)"
-        Properties="
-          IlFile=%(TargetingPackSrc.Identity);
-          OutputFile=$(ArtifactsTFMPackTemp)$(MSBuildProjectName)/%(TargetingPackSrc.RecursiveDir)%(TargetingPackSrc.Filename).dll" />
-    </ItemGroup>
-
-    <MSBuild
-      Projects="@(IndividualFileProject)"
-      Targets="BuildIlFile"
-      BuildInParallel="false"
-      StopOnFirstFailure="true" />
-
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] $(MSBuildProjectName) -> $(ArtifactsTFMPackTemp)$(MSBuildProjectName) DONE" />
-  </Target>
-
-  <Target Name="BuildIlFile"
-          DependsOnTargets="ResolveIlToolPaths">
-    <!--
-      Note: Use awk as hack below to not fill up build logs. Ilasm produces warning on validly
-      disassembled il src. The awk expression eats just that warning.
-    -->
-    <Exec
-      Command="set -o pipefail;$(IlasmDir)ilasm $(IlFile) -dll -quiet -nologo -output=$(OutputFile) |&amp; awk '!/warning : Method has no body/'"
-      IgnoreStandardErrorWarningFormat="true"
-      CustomErrorRegularExpression=": error : " />
-  </Target>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
-
-  <Target Name="Build"
-          Condition="'$(SkipTargetingPacks)' != 'true'"
-          DependsOnTargets="AssembleTargetPack" />
 
 </Project>
