@@ -19,4 +19,4 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
 export DOTNET_MULTILEVEL_LOOKUP=0
 export NUGET_PACKAGES="$scriptroot/packages/restored/"
 
-"$scriptroot/eng/common/build.sh" --build --restore "$@"
+"$scriptroot/eng/common/build.sh" --build --restore --pack "$@"

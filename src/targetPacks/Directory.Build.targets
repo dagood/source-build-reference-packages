@@ -3,6 +3,9 @@
   <Target Name="GetTargetingPackSrc">
     <ItemGroup>
       <TargetingPackSrc Include="$(MSBuildProjectDirectory)/**/*.il" />
+      <!-- Temporarily move files with 'constraint' token that isn't compatible with current ilasm. -->
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)/**/System.Data.Common.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)/**/System.Reflection.Metadata.il" />
     </ItemGroup>
   </Target>
 
@@ -51,4 +54,9 @@
   </Target>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
+
+  <Target Name="Build"
+          Condition="'$(SkipTargetingPacks)' != 'true'"
+          DependsOnTargets="AssembleTargetPack" />
+
 </Project>
