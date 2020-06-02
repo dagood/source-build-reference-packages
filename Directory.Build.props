@@ -11,4 +11,8 @@
     <ArtifactsRefPkgDir>$(ArtifactsDir)reference-packages/</ArtifactsRefPkgDir>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ILAsmToolPackageDir>$(NuGetPackageRoot)$()\$()\</ILAsmToolPackageDir>
+  </PropertyGroup>
+
 </Project>

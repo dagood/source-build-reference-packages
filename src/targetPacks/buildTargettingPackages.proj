@@ -1,11 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
+  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
 
   <PropertyGroup>
     <ILsrcPath>$(RepoRoot)/src/targetPacks/ILsrc/</ILsrcPath>
     <ReferenceAssemblySourcePath>$(RepoRoot)src/referencePackages/src/</ReferenceAssemblySourcePath>
     <TextOnlyProjectsSourcePath>$(RepoRoot)src/textOnlyPackages/</TextOnlyProjectsSourcePath>
     <ArtifactsTFMPackTemp>$(RepoRoot)artifacts/TFMPack/</ArtifactsTFMPackTemp>
-    <IlasmToolPathSB>$(RepoRoot)/artifacts/source-built/coreclr-tools/</IlasmToolPathSB>
+    <RestoreIlTooling>true</RestoreIlTooling>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,8 +30,14 @@
   </Target>
 
   <Target Name="AssembleTargetPacks" BeforeTargets="Build" AfterTargets="BuildTFMDLLStructure" Condition="'@(TargetingPacksSrc)' != '' and '$(SkipTargetingPacks)' != 'true' ">
-    <MSBuild Projects="@(ProjFiles)" BuildInParallel="true"/>
+    <MSBuild Projects="@(ProjFiles)" BuildInParallel="true" Targets="AssembleTargetPack"/>
   </Target>
+
+  <Target Name="BuildError" AfterTargets="Build" Condition="'@(TargetingPacksProjects)' == ''">
+    <Message Importance="High" Text="ERROR:  No projects to build.  Call 'generate' first." />
+  </Target>
+
+  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <Target Name="Build" AfterTargets="AssembleTargetPacks" Condition=" '$(SkipTargetingPacks)' != 'true'" >
     <ItemGroup>
@@ -44,10 +55,6 @@
         NoWarn=NU5125" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm::ss::ff'))] Done Building TargetPacks" />
-  </Target>
-
-  <Target Name="BuildError" AfterTargets="Build" Condition="'@(TargetingPacksProjects)' == ''">
-    <Message Importance="High" Text="ERROR:  No projects to build.  Call 'generate' first." />
   </Target>
 
 </Project>
