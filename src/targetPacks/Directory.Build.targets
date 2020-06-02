@@ -1,14 +1,21 @@
 <Project>
 
-  <ItemGroup>
-    <TargetingPackSrc Include="$(MSBuildProjectDirectory)/**/*.il" />
-  </ItemGroup>
+  <Target Name="GetTargetingPackSrc">
+    <ItemGroup>
+      <TargetingPackSrc Include="$(MSBuildProjectDirectory)/**/*.il" />
+    </ItemGroup>
+  </Target>
 
   <Target Name="AssembleTargetPack"
-          Condition="'@(TargetingPackSrc)' != '' and '$(SkipTargetingPacks)' != 'true' "
+          Condition="'$(SkipTargetingPacks)' != 'true' "
+          DependsOnTargets="
+            GetTargetingPackSrc;
+            BuildTargetingPackIlSrc" />
+
+  <Target Name="BuildTargetingPackIlSrc"
+          Condition="'@(TargetingPackSrc)' != ''"
           DependsOnTargets="ResolveIlToolPaths">
     <PropertyGroup>
-      <BuildInParallel Condition="'$(BuildInParallel)' == ''">true</BuildInParallel>
       <ArtifactsTFMPackTemp>$(RepoRoot)artifacts/TFMPack/</ArtifactsTFMPackTemp>
     </PropertyGroup>
 
@@ -21,4 +28,5 @@
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Done assembling TargetPacks src." />
   </Target>
 
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
 </Project>
