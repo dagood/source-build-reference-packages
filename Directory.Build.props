@@ -1,9 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Project>
+
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
   <PropertyGroup Condition="'$(CopyrightNetFoundation)' != ''">
     <Copyright>$(CopyrightNetFoundation)</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <ArtifactsRefPkgDir>$(ArtifactsDir)reference-packages/</ArtifactsRefPkgDir>
+  </PropertyGroup>
+
 </Project>
