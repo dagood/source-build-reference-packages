@@ -85,7 +85,7 @@
       CustomErrorRegularExpression=": error : " />
   </Target>
 
-  <Target Name="SetNuspecPathToOutput"
+  <Target Name="SetManualPackTaskInputs"
           BeforeTargets="_CalculateInputsOutputsForPack;GenerateNuspec">
     <PropertyGroup>
       <NuspecFile>$(TFMPackTempOutputDir)$(NuspecFile)</NuspecFile>
@@ -97,5 +97,12 @@
   <Target Name="Build"
           Condition="'$(SkipTargetingPacks)' != 'true'"
           DependsOnTargets="AssembleTargetPack" />
+
+  <!--
+    Disable Arcade util that populates PackTask properties. For these projects, the nuspec already
+    contains everything. It's generated when the package is initially deconstructed and tends to be
+    unique per package, so there's no benefit to this Arcade util.
+  -->
+  <Target Name="InitializeStandardNuspecProperties" />
 
 </Project>
