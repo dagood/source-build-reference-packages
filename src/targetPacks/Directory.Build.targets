@@ -7,12 +7,21 @@
       <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Components.il" />
       <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Mvc.Cors.il" />
       <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Routing.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.Aero.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.AeroLite.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.Aero2.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.Common.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Reflection.Metadata.il" />
       <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\netstandard.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\presentationframework.*.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.*.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Activities.Presentation.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.ComponentModel.Composition.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.Common.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.Entity.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Design.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Reflection.Metadata.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Web.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Xml.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.XML.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\WindowsFormsIntegration.il" />
 
       <NuGetGeneratedMetadataFile Include="
         .signature.p7s;
@@ -74,7 +83,7 @@
     <MSBuild
       Projects="@(IndividualFileProject)"
       Targets="BuildIlFile"
-      BuildInParallel="false"
+      BuildInParallel="true"
       StopOnFirstFailure="true" />
 
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] $(MSBuildProjectName) -> $(TFMPackTempOutputDir) DONE" />
