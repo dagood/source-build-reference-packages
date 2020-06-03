@@ -3,6 +3,21 @@
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
+    <RestoreIlTooling>true</RestoreIlTooling>
+
+    <!-- Disable NU5131: unclear warning caused by ref-only (https://github.com/NuGet/Home/issues/8684) -->
+    <NoWarn>$(NoWarn);NU5131</NoWarn>
+    <!-- Don't warn on NU5125 - The 'licenseUrl' element will be deprecated. -->
+    <NoWarn>$(NoWarn);NU5125</NoWarn>
+    <!-- Disable NU5128: we have dirs like 'netcoreapp' that NuGet thinks are like '.NETCoreApp0.0'. -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <!-- Disable NU5048: continue to use deprecated 'PackageIconUrl'/'iconUrl' for now. -->
+    <NoWarn>$(NoWarn);NU5048</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ArtifactsTFMPackTemp>$(RepoRoot)artifacts/TFMPack/</ArtifactsTFMPackTemp>
+    <TFMPackTempOutputDir>$([MSBuild]::NormalizeDirectory('$(BaseOutputPath)', 'pack'))</TFMPackTempOutputDir>
   </PropertyGroup>
 
 </Project>

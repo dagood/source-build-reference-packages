@@ -2,34 +2,66 @@
 
   <Target Name="GetTargetingPackSrc">
     <ItemGroup>
-      <TargetingPackSrc Include="$(MSBuildProjectDirectory)/**/*.il" />
-      <!-- Temporarily move files with 'constraint' token that isn't compatible with current ilasm. -->
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)/**/System.Data.Common.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)/**/System.Reflection.Metadata.il" />
+      <TargetingPackSrc Include="**/*.il" />
+      <!-- Temporarily skip files with 'constraint' token that isn't compatible with current ilasm. -->
+      <TargetingPackSrc Remove="**/System.Data.Common.il" />
+      <TargetingPackSrc Remove="**/System.Reflection.Metadata.il" />
+
+      <NuGetGeneratedMetadataFile Include="
+        .signature.p7s;
+        _rels\**;
+        [Content_Types].xml;
+        " />
+
+      <StructureFile
+        Include="**\*.*"
+        Exclude="
+          @(TargetingPackSrc);
+          **\*.csproj;
+          @(NuGetGeneratedMetadataFile);
+          "/>
+
+      <StaticAssetFile
+        Include="@(StructureFile)"
+        Destination="$(TFMPackTempOutputDir)%(RecursiveDir)%(Filename)%(Extension)" />
     </ItemGroup>
   </Target>
 
   <Target Name="AssembleTargetPack"
           Condition="'$(SkipTargetingPacks)' != 'true' "
           DependsOnTargets="
-            GetTargetingPackSrc;
+            CopyStaticAssetsToOutput;
             BuildTargetingPackIlSrc" />
+  
+  <Target Name="CopyStaticAssetsToOutput"
+          DependsOnTargets="GetTargetingPackSrc">
+    <Error Condition="'$(TFMPackTempOutputDir)' == ''" Text="TFMPackTempOutputDir not defined" />
+
+    <ItemGroup>
+      <ExtraneousFile
+        Include="$(TFMPackTempOutputDir)**"
+        Exclude="@(StaticAssetFile -> '%(Destination)')"/>
+    </ItemGroup>
+
+    <Delete Files="@(ExtraneousFile)" />
+
+    <Copy
+      SourceFiles="@(StaticAssetFile)"
+      DestinationFiles="@(StaticAssetFile -> '%(Destination)')" />
+  </Target>
 
   <Target Name="BuildTargetingPackIlSrc"
+          DependsOnTargets="GetTargetingPackSrc"
           Condition="'@(TargetingPackSrc)' != ''">
-    <PropertyGroup>
-      <ArtifactsTFMPackTemp>$(RepoRoot)artifacts/TFMPack/</ArtifactsTFMPackTemp>
-    </PropertyGroup>
-
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Begin $(MSBuildProjectName) -> $(ArtifactsTFMPackTemp)$(MSBuildProjectName)..." />
-    <MakeDir Directories="@(TargetingPackSrc->'$(ArtifactsTFMPackTemp)$(MSBuildProjectName)/%(RecursiveDir)')" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Begin $(MSBuildProjectName) -> $(TFMPackTempOutputDir)..." />
+    <MakeDir Directories="@(TargetingPackSrc->'$(TFMPackTempOutputDir)%(RecursiveDir)')" />
 
     <ItemGroup>
       <IndividualFileProject
         Include="$(MSBuildProjectFullPath)"
         Properties="
           IlFile=%(TargetingPackSrc.Identity);
-          OutputFile=$(ArtifactsTFMPackTemp)$(MSBuildProjectName)/%(TargetingPackSrc.RecursiveDir)%(TargetingPackSrc.Filename).dll" />
+          OutputFile=$(TFMPackTempOutputDir)%(TargetingPackSrc.RecursiveDir)%(TargetingPackSrc.Filename).dll" />
     </ItemGroup>
 
     <MSBuild
@@ -38,7 +70,7 @@
       BuildInParallel="false"
       StopOnFirstFailure="true" />
 
-    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] $(MSBuildProjectName) -> $(ArtifactsTFMPackTemp)$(MSBuildProjectName) DONE" />
+    <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] $(MSBuildProjectName) -> $(TFMPackTempOutputDir) DONE" />
   </Target>
 
   <Target Name="BuildIlFile"
@@ -51,6 +83,13 @@
       Command="set -o pipefail;$(IlasmDir)ilasm $(IlFile) -dll -quiet -nologo -output=$(OutputFile) |&amp; awk '!/warning : Method has no body/'"
       IgnoreStandardErrorWarningFormat="true"
       CustomErrorRegularExpression=": error : " />
+  </Target>
+
+  <Target Name="SetNuspecPathToOutput"
+          BeforeTargets="_CalculateInputsOutputsForPack;GenerateNuspec">
+    <PropertyGroup>
+      <NuspecFile>$(TFMPackTempOutputDir)$(NuspecFile)</NuspecFile>
+    </PropertyGroup>
   </Target>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
