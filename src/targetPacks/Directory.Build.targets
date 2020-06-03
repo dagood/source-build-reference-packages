@@ -2,10 +2,17 @@
 
   <Target Name="GetTargetingPackSrc">
     <ItemGroup>
-      <TargetingPackSrc Include="**/*.il" />
+      <TargetingPackSrc Include="$(MSBuildProjectDirectory)\**\*.il" />
       <!-- Temporarily skip files with 'constraint' token that isn't compatible with current ilasm. -->
-      <TargetingPackSrc Remove="**/System.Data.Common.il" />
-      <TargetingPackSrc Remove="**/System.Reflection.Metadata.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Components.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Mvc.Cors.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Routing.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.Aero.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.AeroLite.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.Aero2.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.Common.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Reflection.Metadata.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\netstandard.il" />
 
       <NuGetGeneratedMetadataFile Include="
         .signature.p7s;
