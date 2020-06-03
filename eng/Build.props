@@ -1,10 +1,25 @@
 <Project>
 
   <ItemGroup>
-    <!-- <ProjectToBuild Include="$(RepoRoot)src\targetPacks\buildTargettingPackages.proj" /> -->
     <ProjectToBuild Include="$(RepoRoot)src/targetPacks/ILsrc/microsoft.netcore.app/2.0.0/microsoft.netcore.app.2.0.0.csproj" />
     <!-- <ProjectToBuild Include="$(RepoRoot)src\targetPacks\ILsrc\**\*.csproj" /> -->
     <!-- <ProjectToBuild Include="$(RepoRoot)src\referencePackages\buildReferencePackages.proj" /> -->
   </ItemGroup>
+
+  <!--
+    Adding new projects is somewhat copy-paste heavy and may result in project name overlaps. Catch
+    that early, as it may cause binclash otherwise.
+  -->
+  <Target Name="EnsureUniqueProjectNames"
+          BeforeTargets="Execute">
+    <ItemGroup>
+      <ProjectToBuildName Include="@(ProjectToBuild -> '%(Filename)%(Extension)')" />
+      <DistinctProjectToBuildName Include="@(ProjectToBuildName->Distinct())" />
+    </ItemGroup>
+
+    <Error
+      Condition="@(ProjectToBuildName->Count()) != @(DistinctProjectToBuildName->Count())"
+      Text="A project name is duplicated. Every project name must be distinct to have separate output directories." />
+  </Target>
 
 </Project>
