@@ -2,6 +2,10 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.props, $(MSBuildThisFileDirectory)..))" />
 
   <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+
     <IsPackable>true</IsPackable>
     <RestoreIlTooling>true</RestoreIlTooling>
 
@@ -13,6 +17,10 @@
     <NoWarn>$(NoWarn);NU5128</NoWarn>
     <!-- Disable NU5048: continue to use deprecated 'PackageIconUrl'/'iconUrl' for now. -->
     <NoWarn>$(NoWarn);NU5048</NoWarn>
+    <!-- Disable NU5129: NuGet expects build/*.props, doesn't seem to consider build/{tfm}/*.props. -->
+    <NoWarn>$(NoWarn);NU5129</NoWarn>
+    <!-- Disable NU5109, NU5127: NuGet has some expectations and hints for _._ usage, but we have some specific packages to replicate. -->
+    <NoWarn>$(NoWarn);NU5109;NU5127</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>
