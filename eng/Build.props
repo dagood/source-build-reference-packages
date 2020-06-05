@@ -1,9 +1,14 @@
 <Project>
 
   <ItemGroup>
-    <!-- <ProjectToBuild Include="$(RepoRoot)src\targetPacks\ILsrc\**\*.csproj" /> -->
-    <ProjectToBuild Include="$(RepoRoot)src\textOnlyPackages\src\**\*.csproj" />
-    <!-- <ProjectToBuild Include="$(RepoRoot)src\referencePackages\buildReferencePackages.proj" /> -->
+    <!-- <TargetingPackageProject Include="$(RepoRoot)src\targetPacks\ILsrc\**\*.csproj" /> -->
+    <ProjectToBuild Include="@(TargetingPackageProject)" />
+
+    <TextOnlyPackageProject Include="$(RepoRoot)src\textOnlyPackages\src\**\*.csproj" />
+    <ProjectToBuild Include="@(TextOnlyPackageProject)" />
+
+    <ReferencePackageProject Include="$(RepoRoot)src\referencePackages\src\**\*.csproj" />
+    <ProjectToBuild Include="@(ReferencePackageProject)" />
   </ItemGroup>
 
   <!--

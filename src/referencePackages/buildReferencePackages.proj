@@ -7,7 +7,6 @@
 
   <PropertyGroup>
     <ReferenceAssemblySourcePath>$(RepoRoot)src/referencePackages/src/</ReferenceAssemblySourcePath>
-    <TextOnlyProjectsSourcePath>$(RepoRoot)src/textOnlyPackages/</TextOnlyProjectsSourcePath>
     <ArtifactsRefPkgDir>$(RepoRoot)artifacts/reference-packages/</ArtifactsRefPkgDir>
   </PropertyGroup>
 
@@ -16,7 +15,6 @@
   <ItemGroup>
     <NuspecsToCopy Include="$(ReferenceAssemblySourcePath)**/*.nuspec" />
     <DummyFilesToCopy Include="$(ReferenceAssemblySourcePath)**/_._" />
-    <TextOnlyProjects Include="$(TextOnlyProjectsSourcePath)**/*.csproj" />
   </ItemGroup>
   
   <Target Name="CopyNuspecFiles" BeforeTargets="Build" Condition="'@(NuspecsToCopy)' != ''">
@@ -27,17 +25,6 @@
   <Target Name="CopyDummyFiles" BeforeTargets="Build" Condition="'@(DummyFilesToCopy)' != ''">
     <Copy SourceFiles="@(DummyFilesToCopy)" DestinationFiles="@(DummyFilesToCopy->'$(ArtifactsBinDir)%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Importance="High" Text="Copy DummyFiles Complete."/>
-  </Target>
-
-  <Target Name="BuildTextOnlyPackages" BeforeTargets="Build" Condition="'@(TextOnlyProjects)' != ''">
-    <MSBuild Projects="@(TextOnlyProjects)" Targets="Restore" />
-    <!-- Don't warn on NU5125 - The 'licenseUrl' element will be deprecated. -->
-    <MSBuild
-      Projects="@(TextOnlyProjects)"
-      Targets="Pack"
-      Properties="
-        PackageOutputPath=$(ArtifactsRefPkgDir);
-        NoWarn=NU5125" />
   </Target>
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />

@@ -1,0 +1,19 @@
+<Project>
+
+  <Target Name="EnsureOrderProjectReferencesPacked"
+          BeforeTargets="Build">
+    <MSBuild Projects="@(OrderProjectReference)" Targets="Pack" />
+  </Target>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
+
+  <Target Name="Build" />
+
+  <!--
+    Disable Arcade util that populates PackTask properties. For these projects, the nuspec already
+    contains everything. It's generated when the package is initially deconstructed and tends to be
+    unique per package, so there's no benefit to this Arcade util.
+  -->
+  <Target Name="InitializeStandardNuspecProperties" />
+
+</Project>
