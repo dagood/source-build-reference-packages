@@ -1,7 +1,8 @@
 <Project>
 
   <ItemGroup>
-    <ProjectToBuild Include="$(RepoRoot)src\targetPacks\ILsrc\**\*.csproj" />
+    <!-- <ProjectToBuild Include="$(RepoRoot)src\targetPacks\ILsrc\**\*.csproj" /> -->
+    <ProjectToBuild Include="$(RepoRoot)src\textOnlyPackages\src\**\*.csproj" />
     <!-- <ProjectToBuild Include="$(RepoRoot)src\referencePackages\buildReferencePackages.proj" /> -->
   </ItemGroup>
 

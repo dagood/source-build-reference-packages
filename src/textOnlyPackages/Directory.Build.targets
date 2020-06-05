@@ -1,0 +1,28 @@
+<Project>
+
+  <Target Name="SetManualPackTaskInputs"
+          BeforeTargets="_CalculateInputsOutputsForPack;GenerateNuspec">
+    <ItemGroup>
+      <NuspecFile Include="*.nuspec" />
+    </ItemGroup>
+
+    <Error Condition="@(NuspecFile->Count()) != 1" Text="Expected exactly one nuspec file." />
+
+    <PropertyGroup>
+      <NuspecFile>$(TFMPackTempOutputDir)@(NuspecFile)</NuspecFile>
+    </PropertyGroup>
+  </Target>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
+
+  <!-- No Build. Only Pack. -->
+  <Target Name="Build" />
+
+  <!--
+    Disable Arcade util that populates PackTask properties. For these projects, the nuspec already
+    contains everything. It's generated when the package is initially deconstructed and tends to be
+    unique per package, so there's no benefit to this Arcade util.
+  -->
+  <Target Name="InitializeStandardNuspecProperties" />
+
+</Project>
