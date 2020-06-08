@@ -1,8 +1,47 @@
 <Project>
 
   <Target Name="EnsureOrderProjectReferencesPacked"
-          BeforeTargets="Build">
-    <MSBuild Projects="@(OrderProjectReference)" Targets="Pack" />
+          BeforeTargets="Restore">
+    <!-- Turn package references into project order references by convention. -->
+    <ItemGroup>
+      <PackageReferenceWithLower
+        Include="@(PackageReference)"
+        IdToLower="$([System.String]::new(`%(PackageReference.Identity)`).ToLowerInvariant())" />
+
+      <PotentialOrderProjectReference Include="$([MSBuild]::NormalizePath(
+        '$(MSBuildThisFileDirectory)',
+        'src',
+        '%(PackageReferenceWithLower.IdToLower)',
+        '%(PackageReferenceWithLower.Version)',
+        '%(PackageReferenceWithLower.Identity).%(PackageReferenceWithLower.Version).csproj'
+        ))" />
+
+      <OrderProjectReference
+        Include="@(PotentialOrderProjectReference)"
+        Condition="Exists('%(Identity)')" />
+
+      <NonexistentOrderProjectReference
+        Include="@(PotentialOrderProjectReference)"
+        Exclude="@(OrderProjectReference)"/>
+    </ItemGroup>
+
+    <MSBuild Projects="@(OrderProjectReference)" Targets="Restore" RemoveProperties="InnerTargetFramework;TargetFramework" />
+    <MSBuild Projects="@(OrderProjectReference)" Targets="Pack" RemoveProperties="InnerTargetFramework;TargetFramework" />
+
+    <ItemGroup Condition="'$(InnerTargetFramework)' != 'true'">
+      <TargetFrameworkToEnsurePacked Include="$(TargetFrameworks)" />
+      <EnsurePackedWithTargetFrameworkProject
+        Include="$(MSBuildProjectFullPath)"
+        Properties="
+          TargetFramework=%(TargetFrameworkToEnsurePacked.Identity);
+          InnerTargetFramework=true"
+        Condition="'%(TargetFrameworkToEnsurePacked.Identity)' != ''" />
+    </ItemGroup>
+
+    <MSBuild
+      Condition="'@(EnsurePackedWithTargetFrameworkProject)' != ''"
+      Projects="@(EnsurePackedWithTargetFrameworkProject)"
+      Targets="EnsureOrderProjectReferencesPacked" />
   </Target>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />

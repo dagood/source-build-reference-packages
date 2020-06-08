@@ -7,8 +7,12 @@
     <TextOnlyPackageProject Include="$(RepoRoot)src\textOnlyPackages\src\**\*.csproj" />
     <ProjectToBuild Include="@(TextOnlyPackageProject)" />
 
+    <!--
+      Don't include reference projects directly. They need to restore individually because the nupkg
+      dependencies lead into each other: this means Arcade's one-off restore pass won't work.
+    -->
     <ReferencePackageProject Include="$(RepoRoot)src\referencePackages\src\**\*.csproj" />
-    <ProjectToBuild Include="@(ReferencePackageProject)" />
+    <ProjectToBuild Include="$(RepoRoot)src/referencePackages/buildReferencePackages.proj" />
   </ItemGroup>
 
   <!--

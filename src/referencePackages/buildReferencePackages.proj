@@ -5,6 +5,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <!--
   <PropertyGroup>
     <ReferenceAssemblySourcePath>$(RepoRoot)src/referencePackages/src/</ReferenceAssemblySourcePath>
     <ArtifactsRefPkgDir>$(RepoRoot)artifacts/reference-packages/</ArtifactsRefPkgDir>
@@ -26,28 +27,13 @@
     <Copy SourceFiles="@(DummyFilesToCopy)" DestinationFiles="@(DummyFilesToCopy->'$(ArtifactsBinDir)%(RecursiveDir)%(Filename)%(Extension)')" />
     <Message Importance="High" Text="Copy DummyFiles Complete."/>
   </Target>
+  -->
 
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 
   <Target Name="Build">
-    <Error Condition="'@(ProjectsToBuild)' == ''" Text="ERROR:  No projects to build.  Call 'generate' first." />
-    <!-- Don't warn on NU1603 - A package dependency specified a version that could not be found -->
-    <!-- Don't warn on NU1605 - Detected package downgrade. -->
-    <!-- Don't warn on NU5125 - The 'licenseUrl' element will be deprecated. -->
-    <!-- Don't warn on CS0109 - The member does not hide an accessible member. -->
-    <!-- Don't warn on CS0169 - The field is never used. -->
-    <!-- Don't warn on CS0618 - Type is obsolete. -->
-    <!-- Don't warn on CS0649 - The field is never assigned to. -->
-    <!-- Don't warn on CS3001, CS3002, CS3003, CS3009 - Type is not CLS-compliant. -->
-    <MSBuild
-      Projects="@(ProjectsToBuild)"
-      Targets="Pack"
-      Properties="
-        ArtifactsBinDir=$(ArtifactsBinDir);
-        PackageOutputPath=$(ArtifactsRefPkgDir);
-        ArtifactsObjDir=$(ArtifactsObjDir);
-        RepoRoot=$(RepoRoot);
-        NoWarn=NU1603,NU1605,NU5125,CS0109,CS0169,CS0618,CS0649,CS3001,CS3002,CS3003,CS3009" />
+    <MSBuild Projects="@(ReferencePackageProject)" Targets="Restore" />
+    <MSBuild Projects="@(ReferencePackageProject)" Targets="Pack" />
   </Target>
 
 </Project>
