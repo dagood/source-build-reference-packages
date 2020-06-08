@@ -12,8 +12,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
 
     <IsPackable>true</IsPackable>
@@ -27,6 +25,9 @@
     <!-- Don't warn on CS0649 - The field is never assigned to. -->
     <!-- Don't warn on CS3001, CS3002, CS3003, CS3009 - Type is not CLS-compliant. -->
     <NoWarn>$(NoWarn);NU1603,NU1605,NU5125,CS0109,CS0169,CS0618,CS0649,CS3001,CS3002,CS3003,CS3009</NoWarn>
+
+    <!-- Disable NU5128 -->
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

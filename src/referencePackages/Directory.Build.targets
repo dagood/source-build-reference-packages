@@ -1,19 +1,23 @@
 <Project>
 
   <Target Name="EnsureOrderProjectReferencesPacked"
+          DependsOnTargets="_GenerateRestoreGraph"
           BeforeTargets="Restore">
-    <!-- Turn package references into project order references by convention. -->
+    <!--
+      Turn package references into project order references by convention. Use the restore graph so
+      we find references from all target frameworks, not just the current one.
+    -->
     <ItemGroup>
-      <PackageReferenceWithLower
-        Include="@(PackageReference)"
-        IdToLower="$([System.String]::new(`%(PackageReference.Identity)`).ToLowerInvariant())" />
+      <GraphEntryWithIdToLower
+        Include="@(_RestoreGraphEntry->WithMetadataValue('Type', 'Dependency'))"
+        IdToLower="$([System.String]::new(`%(_RestoreGraphEntry.Id)`).ToLowerInvariant())" />
 
       <PotentialOrderProjectReference Include="$([MSBuild]::NormalizePath(
         '$(MSBuildThisFileDirectory)',
         'src',
-        '%(PackageReferenceWithLower.IdToLower)',
-        '%(PackageReferenceWithLower.Version)',
-        '%(PackageReferenceWithLower.Identity).%(PackageReferenceWithLower.Version).csproj'
+        '%(GraphEntryWithIdToLower.IdToLower)',
+        '%(GraphEntryWithIdToLower.VersionRange)',
+        '%(GraphEntryWithIdToLower.Id).%(GraphEntryWithIdToLower.VersionRange).csproj'
         ))" />
 
       <OrderProjectReference
@@ -25,28 +29,26 @@
         Exclude="@(OrderProjectReference)"/>
     </ItemGroup>
 
-    <MSBuild Projects="@(OrderProjectReference)" Targets="Restore" RemoveProperties="InnerTargetFramework;TargetFramework" />
-    <MSBuild Projects="@(OrderProjectReference)" Targets="Pack" RemoveProperties="InnerTargetFramework;TargetFramework" />
+    <Message Importance="High" Text="$(MSBuildProjectName) waiting for @(OrderProjectReference -> '%(Filename)', ', ')" />
 
-    <ItemGroup Condition="'$(InnerTargetFramework)' != 'true'">
-      <TargetFrameworkToEnsurePacked Include="$(TargetFrameworks)" />
-      <EnsurePackedWithTargetFrameworkProject
-        Include="$(MSBuildProjectFullPath)"
-        Properties="
-          TargetFramework=%(TargetFrameworkToEnsurePacked.Identity);
-          InnerTargetFramework=true"
-        Condition="'%(TargetFrameworkToEnsurePacked.Identity)' != ''" />
+    <MSBuild Projects="@(OrderProjectReference)" Targets="Restore" />
+    <MSBuild Projects="@(OrderProjectReference)" Targets="Pack" />
+  </Target>
+
+  <Target Name="SetManualPackTaskInputs"
+          BeforeTargets="_CalculateInputsOutputsForPack;GenerateNuspec">
+    <ItemGroup>
+      <NuspecFile Include="*.nuspec" />
     </ItemGroup>
 
-    <MSBuild
-      Condition="'@(EnsurePackedWithTargetFrameworkProject)' != ''"
-      Projects="@(EnsurePackedWithTargetFrameworkProject)"
-      Targets="EnsureOrderProjectReferencesPacked" />
+    <Error Condition="@(NuspecFile->Count()) != 1" Text="Expected exactly one nuspec file." />
+
+    <PropertyGroup>
+      <NuspecFile>@(NuspecFile)</NuspecFile>
+    </PropertyGroup>
   </Target>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
-
-  <Target Name="Build" />
 
   <!--
     Disable Arcade util that populates PackTask properties. For these projects, the nuspec already

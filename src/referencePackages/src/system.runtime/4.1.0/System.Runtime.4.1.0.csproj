@@ -2,14 +2,8 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), dir.props))/dir.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0;netstandard1.2;netstandard1.3;netstandard1.5;net462</TargetFrameworks>
-    <NuspecFile>$(ArtifactsBinDir)system.runtime/4.1.0/system.runtime.nuspec</NuspecFile>
     <AssemblyOriginatorKeyFile>$(KeyFileDir)MSFT.snk</AssemblyOriginatorKeyFile>
    </PropertyGroup>
-
-  <PropertyGroup>
-    <OutputPath>$(ArtifactsBinDir)system.runtime/4.1.0/ref/</OutputPath>
-    <IntermediateOutputPath>$(ArtifactsObjDir)system.runtime/4.1.0</IntermediateOutputPath>
-  </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="**/ref/$(TargetFramework)/*.cs" />

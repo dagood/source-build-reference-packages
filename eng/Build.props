@@ -11,7 +11,8 @@
       Don't include reference projects directly. They need to restore individually because the nupkg
       dependencies lead into each other: this means Arcade's one-off restore pass won't work.
     -->
-    <ReferencePackageProject Include="$(RepoRoot)src\referencePackages\src\**\*.csproj" />
+    <!-- <ReferencePackageProject Include="$(RepoRoot)src\referencePackages\src\**\*.csproj" /> -->
+    <ReferencePackageProject Include="$(RepoRoot)src/referencePackages/src/system.runtime/4.1.0/System.Runtime.4.1.0.csproj" />
     <ProjectToBuild Include="$(RepoRoot)src/referencePackages/buildReferencePackages.proj" />
   </ItemGroup>
 
