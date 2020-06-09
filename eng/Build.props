@@ -8,7 +8,7 @@
     <ProjectToBuild Include="@(TextOnlyPackageProject)" />
 
     <!-- <ReferencePackageProject Include="$(RepoRoot)src\referencePackages\src\**\*.csproj" /> -->
-    <ReferencePackageProject Include="$(RepoRoot)src/referencePackages/src/system.runtime/4.1.0/System.Runtime.4.1.0.csproj" />
+    <ReferencePackageProject Include="$(RepoRoot)src/referencePackages/src/system.runtime.interopservices/4.1.0/System.Runtime.InteropServices.4.1.0.csproj" />
     <ProjectToBuild Include="@(ReferencePackageProject)" />
   </ItemGroup>
 

@@ -28,6 +28,8 @@
     <SignAssembly>true</SignAssembly>
     <PublicSign>true</PublicSign>
 
+    <StrongNameKeyId>Microsoft</StrongNameKeyId>
+
     <SourceControlInformationFeatureSupported>false</SourceControlInformationFeatureSupported>
     <Configuration>Release</Configuration>
     <EnableSourceLink>false</EnableSourceLink>
