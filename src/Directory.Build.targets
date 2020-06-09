@@ -48,23 +48,14 @@
 
   <Target Name="CopyBuildOutputToTempOutput"
           Condition="'$(TargetFramework)' != ''"
-          BeforeTargets="CopyFilesToOutputDirectory">
-
-    <!-- <Error
-      Condition="@(Compile->Count()) != 1"
-      Text="Compile items count != 1. Unable to use assembly name convention to remove version from AssemblyName." />
-
-    <PropertyGroup>
-      <_versionlessAssemblyName>%(Compile.Filename)$(TargetExt)</_versionlessAssemblyName>
-    </PropertyGroup>
-
+          AfterTargets="CopyFilesToOutputDirectory">
     <Copy
-      SourceFiles="@(IntermediateAssembly)"
+      SourceFiles="$(TargetPath)"
       DestinationFiles="$([MSBuild]::NormalizePath(
         '$(TFMPackTempOutputDir)',
         'ref',
         '$(TargetFramework)',
-        '$(_versionlessAssemblyName)'))" /> -->
+        '$(TargetFileName)'))" />
   </Target>
 
   <Target Name="CopyStaticAssetsToOutput"

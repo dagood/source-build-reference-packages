@@ -60,6 +60,10 @@
 
     <!-- Disable NU5128 -->
     <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <!-- Disable NU5131: unclear warning caused by ref-only (https://github.com/NuGet/Home/issues/8684) -->
+    <NoWarn>$(NoWarn);NU5131</NoWarn>
+    <!-- Disable NU5048: continue to use deprecated 'PackageIconUrl'/'iconUrl' for now. -->
+    <NoWarn>$(NoWarn);NU5048</NoWarn>
   </PropertyGroup>
 
 </Project>
