@@ -38,6 +38,7 @@
         <Reference Include="System.Security" />
         <Reference Include="System.Xml" />
         <Reference Include="System.Xml.Linq" />
+        <Reference Include="System" />
     </ItemGroup>
 
   
