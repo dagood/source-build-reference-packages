@@ -29,14 +29,14 @@
   </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
-        <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryPackageVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="$(NETStandardImplicitPackageVersion)" />
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-        <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryPackageVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="$(NETStandardImplicitPackageVersion)" />
         <PackageReference Include="System.Memory" Version="4.5.4" />
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-        <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryPackageVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="$(NETStandardImplicitPackageVersion)" />
         <PackageReference Include="System.Memory" Version="4.5.4" />
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">

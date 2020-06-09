@@ -23,7 +23,7 @@
   </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
-        <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryPackageVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="$(NETStandardImplicitPackageVersion)" />
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
         <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net45" Version="1.0.0-alpha-5" />

@@ -26,15 +26,15 @@
   </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.0' ">
-        <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryPackageVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="$(NETStandardImplicitPackageVersion)" />
         <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.1' ">
-        <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryPackageVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="$(NETStandardImplicitPackageVersion)" />
         <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     </ItemGroup>
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-        <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryPackageVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="$(NETStandardImplicitPackageVersion)" />
     </ItemGroup>
 
   

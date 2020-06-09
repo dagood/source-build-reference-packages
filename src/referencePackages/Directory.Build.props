@@ -44,8 +44,6 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
-
     <IsPackable>true</IsPackable>
 
     <!-- Don't warn on NU1603 - A package dependency specified a version that could not be found -->

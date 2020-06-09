@@ -23,7 +23,7 @@
   </ItemGroup>
 
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-        <PackageReference Include="NETStandard.Library" Version="$(NETStandardLibraryPackageVersion)" />
+        <PackageReference Include="NETStandard.Library" Version="$(NETStandardImplicitPackageVersion)" />
         <PackageReference Include="NuGet.DependencyResolver.Core" Version="5.1.0" />
         <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
         <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
