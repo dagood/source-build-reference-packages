@@ -4,17 +4,8 @@
 
   <Import Project="$(RepositoryEngineeringDir)Build.props" />
 
-  <PropertyGroup Condition="'$(CopyrightNetFoundation)' != ''">
-    <Copyright>$(CopyrightNetFoundation)</Copyright>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-  </PropertyGroup>
-
   <PropertyGroup>
     <ArtifactsRefPkgDir>$(ArtifactsDir)reference-packages/</ArtifactsRefPkgDir>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <ILAsmToolPackageDir>$(NuGetPackageRoot)$()\$()\</ILAsmToolPackageDir>
   </PropertyGroup>
 
 </Project>

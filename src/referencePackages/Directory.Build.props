@@ -1,14 +1,46 @@
 <Project>
+
+  <!--
+    The project name uses {AssemblyName}.{Version}.csproj format to be unqiue, because we build
+    multiple versions of the same package IDs. This means the AssemblyName will include the version
+    in the name, unlike the real packages. To fix this, use the parent parent dir name as the
+    assembly name, as it has the correct versionless name and capitalization.
+
+    If this doesn't work in a specific case, manually define AssemblyName in the project, or in a
+    Directory.Build.props for that whole package ID.
+  -->
+  <PropertyGroup>
+    <ProjectParentDir>$([System.IO.Directory]::GetParent('$(MSBuildProjectDirectory)'))</ProjectParentDir>
+    <AssemblyName Condition="'$(AssemblyName)' == ''">$([MSBuild]::MakeRelative('$(MSBuildThisFileDirectory)src', '$(ProjectParentDir)'))</AssemblyName>
+  </PropertyGroup>
+
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.props, $(MSBuildThisFileDirectory)..))" />
 
-  <!-- All reference packages tend to depend on targeting and text only packages building first. -->
-  <ItemGroup>
-    <OrderProjectReference Include="@(TargetingPackageProject)" />
-    <OrderProjectReference Include="@(TextOnlyPackageProject)" />
-  </ItemGroup>
-
   <PropertyGroup>
-    <RestoreSources>$(ArtifactsPackagesDir)</RestoreSources>
+    <!-- Common properties for all Reference Packages -->
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <AssemblyOriginatorKeyFile>$(RepoRoot)src/referencePackages/MSFT.snk</AssemblyOriginatorKeyFile>
+    <KeyFileDir>$(RepoRoot)src/referencePackages/snk/</KeyFileDir>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign>true</PublicSign>
+
+    <SourceControlInformationFeatureSupported>false</SourceControlInformationFeatureSupported>
+    <Configuration>Release</Configuration>
+    <EnableSourceLink>false</EnableSourceLink>
+
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <AddAdditionalExplicitAssemblyReferences>false</AddAdditionalExplicitAssemblyReferences>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <RuntimeMetadataVersion>v4.0.30319</RuntimeMetadataVersion>
+
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <WarningsAsErrors></WarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -28,11 +60,6 @@
 
     <!-- Disable NU5128 -->
     <NoWarn>$(NoWarn);NU5128</NoWarn>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <ArtifactsTFMPackTemp>$(RepoRoot)artifacts/TFMPack/</ArtifactsTFMPackTemp>
-    <TFMPackTempOutputDir>$([MSBuild]::NormalizeDirectory('$(BaseOutputPath)', 'pack'))</TFMPackTempOutputDir>
   </PropertyGroup>
 
 </Project>

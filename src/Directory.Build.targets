@@ -1,0 +1,111 @@
+<Project>
+
+  <Target Name="GetProjectSrc">
+    <ItemGroup>
+      <TargetingPackSrc Include="$(MSBuildProjectDirectory)\**\*.il" />
+      <!-- Temporarily skip files with 'constraint' token that isn't compatible with current ilasm. -->
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Components.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Mvc.Cors.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Routing.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\netstandard.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\presentationframework.*.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.*.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Activities.Presentation.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.ComponentModel.Composition.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.Common.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.Entity.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Design.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Reflection.Metadata.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Web.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Xml.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.XML.il" />
+      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\WindowsFormsIntegration.il" />
+
+      <PotentialCompileSrc Include="**\*.cs" />
+
+      <NuGetGeneratedMetadataFile Include="
+        .signature.p7s;
+        _rels\**;
+        [Content_Types].xml;
+        " />
+
+      <StructureFile
+        Include="**\*.*"
+        Exclude="
+          @(TargetingPackSrc);
+          @(PotentialCompileSrc);
+          **\*.csproj;
+          @(NuGetGeneratedMetadataFile);
+          "/>
+
+      <StaticAssetFile
+        Include="@(StructureFile)"
+        Destination="$(TFMPackTempOutputDir)%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
+
+  <Target Name="CopyBuildOutputToTempOutput"
+          Condition="'$(TargetFramework)' != ''"
+          BeforeTargets="CopyFilesToOutputDirectory">
+
+    <!-- <Error
+      Condition="@(Compile->Count()) != 1"
+      Text="Compile items count != 1. Unable to use assembly name convention to remove version from AssemblyName." />
+
+    <PropertyGroup>
+      <_versionlessAssemblyName>%(Compile.Filename)$(TargetExt)</_versionlessAssemblyName>
+    </PropertyGroup>
+
+    <Copy
+      SourceFiles="@(IntermediateAssembly)"
+      DestinationFiles="$([MSBuild]::NormalizePath(
+        '$(TFMPackTempOutputDir)',
+        'ref',
+        '$(TargetFramework)',
+        '$(_versionlessAssemblyName)'))" /> -->
+  </Target>
+
+  <Target Name="CopyStaticAssetsToOutput"
+          BeforeTargets="Pack;GenerateNuspec"
+          DependsOnTargets="GetProjectSrc">
+    <!-- Ensure TFMPackTempOutputDir defined, to avoid globbing entire machine... -->
+    <Error Condition="'$(TFMPackTempOutputDir)' == ''" Text="TFMPackTempOutputDir not defined" />
+
+    <Copy
+      SourceFiles="@(StaticAssetFile)"
+      DestinationFiles="@(StaticAssetFile -> '%(Destination)')" />
+  </Target>
+
+  <!--
+    Instead of using the nuspec inside the directory, use the one that we copied to a temp
+    directory. Normally this would be done by setting the property. However, in this case, the
+    project file already sets it, which takes priority over Directory.Build.props, and we don't want
+    to modify the project files too much. This target is also a nice point to enforce that we do
+    actually have a nuspec.
+  -->
+  <Target Name="SetManualPackTaskInputs"
+          BeforeTargets="_CalculateInputsOutputsForPack;GenerateNuspec">
+    <ItemGroup>
+      <NuspecFile Include="*.nuspec" />
+    </ItemGroup>
+
+    <Error Condition="@(NuspecFile->Count()) != 1" Text="Expected exactly one nuspec file." />
+
+    <PropertyGroup>
+      <NuspecFile>$(TFMPackTempOutputDir)@(NuspecFile)</NuspecFile>
+    </PropertyGroup>
+  </Target>
+
+  <!-- Import SDK and Arcade SDK. Overrides below. -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
+
+  <!--
+    Disable Arcade util that populates PackTask properties. For these projects, the nuspec already
+    contains everything. It's generated when the package is initially deconstructed and tends to be
+    unique per package, so there's no benefit to this Arcade util.
+  -->
+  <Target Name="InitializeStandardNuspecProperties" />
+
+</Project>

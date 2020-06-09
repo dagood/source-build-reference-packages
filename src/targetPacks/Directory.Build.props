@@ -23,9 +23,4 @@
     <NoWarn>$(NoWarn);NU5109;NU5127</NoWarn>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <ArtifactsTFMPackTemp>$(RepoRoot)artifacts/TFMPack/</ArtifactsTFMPackTemp>
-    <TFMPackTempOutputDir>$([MSBuild]::NormalizeDirectory('$(BaseOutputPath)', 'pack'))</TFMPackTempOutputDir>
-  </PropertyGroup>
-
 </Project>
