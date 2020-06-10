@@ -49,12 +49,20 @@
   <Target Name="CopyBuildOutputToTempOutput"
           Condition="'$(TargetFramework)' != ''"
           AfterTargets="CopyFilesToOutputDirectory">
+    <Error
+      Condition="@(Compile->Count()) != 1"
+      Text="Number of Compile items != 1. We need just one, to determine the path of the resulting DLL in the package including ref/lib and TFM." />
+
+    <ItemGroup>
+      <RelativeCompilePath Include="$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)\', '%(Compile.FullPath)'))" />
+      <RelativeCompileDir Include="$([System.IO.Directory]::GetParent('%(RelativeCompilePath.Identity)'))" />
+    </ItemGroup>
+
     <Copy
       SourceFiles="$(TargetPath)"
       DestinationFiles="$([MSBuild]::NormalizePath(
         '$(TFMPackTempOutputDir)',
-        'ref',
-        '$(TargetFramework)',
+        '%(RelativeCompileDir.Identity)',
         '$(TargetFileName)'))" />
   </Target>
 

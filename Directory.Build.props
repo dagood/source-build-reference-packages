@@ -2,8 +2,6 @@
 
   <Import Project="Sdk.props" Sdk="Microsoft.DotNet.Arcade.Sdk" />
 
-  <Import Project="$(RepositoryEngineeringDir)Build.props" />
-
   <PropertyGroup>
     <ArtifactsRefPkgDir>$(ArtifactsDir)reference-packages/</ArtifactsRefPkgDir>
   </PropertyGroup>
