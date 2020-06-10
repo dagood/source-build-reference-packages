@@ -66,8 +66,8 @@
       Text="Number of Compile items != 1. We need just one, to determine the path of the resulting DLL in the package including ref/lib and TFM." />
 
     <ItemGroup>
-      <RelativeCompilePath Include="$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)\', '%(Compile.FullPath)'))" />
-      <RelativeCompileDir Include="$([System.IO.Directory]::GetParent('%(RelativeCompilePath.Identity)'))" />
+      <FullCompileDir Include="$([System.IO.Directory]::GetParent('%(Compile.Identity)'))" />
+      <RelativeCompileDir Include="$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)\', '%(FullCompileDir.Identity)'))" />
     </ItemGroup>
 
     <Copy
