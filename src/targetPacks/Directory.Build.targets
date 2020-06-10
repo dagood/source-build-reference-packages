@@ -7,10 +7,6 @@
         DestinationFile="$(IntermediateOutputPath)%(RecursiveDir)%(Filename).patched%(Extension)" />
     </ItemGroup>
 
-    <Message
-      Importance="Normal"
-      Text="Patching 'constraint' usage. diff %(TargetingPackSrcRequiringConstraintPatch.FullPath) %(TargetingPackSrcRequiringConstraintPatch.DestinationFile)" />
-
     <!-- Wrap constraint in single quotes in certain circumstances. -->
     <Exec Command="
       set -e

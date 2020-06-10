@@ -3,8 +3,11 @@
   <Target Name="GetProjectSrc">
     <ItemGroup>
       <!--
-        Files that need the 'constraint' token fixed before they can be assembled: they were
-        decompiled with a 3.1 ildasm not compatible with 5.0 ilasm.
+        Files that may need the 'constraint' token fixed before they can be assembled. They were
+        decompiled with a 3.1 ildasm not compatible with 5.0 ilasm. In some cases the fix is not
+        necessary for a given IL filename in a certain TFM, but is necessary for a file with the
+        same name in a different TFM. The patch doesn't take a particularly long time, so prefer
+        keeping this list simple.
       -->
       <TargetingPackSrcRequiringConstraintPatch
         Include="
