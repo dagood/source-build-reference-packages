@@ -39,6 +39,8 @@
 
   <Target Name="Build"
           Condition="'$(SkipTargetingPacks)' != 'true'"
-          DependsOnTargets="BuildTargetingPackIlSrc" />
+          DependsOnTargets="
+            GetProjectSrc;
+            BuildTargetingPackIlSrc" />
 
 </Project>
