@@ -1,7 +1,30 @@
 <Project>
 
+  <Target Name="PatchIl"
+          Condition="'@(TargetingPackSrcRequiringConstraintPatch)' != ''">
+    <ItemGroup>
+      <TargetingPackSrcRequiringConstraintPatch
+        DestinationFile="$(IntermediateOutputPath)%(RecursiveDir)%(Filename).patched%(Extension)" />
+    </ItemGroup>
+
+    <Message
+      Importance="Normal"
+      Text="Patching 'constraint' usage. diff %(TargetingPackSrcRequiringConstraintPatch.FullPath) %(TargetingPackSrcRequiringConstraintPatch.DestinationFile)" />
+
+    <!-- Wrap constraint in single quotes in certain circumstances. -->
+    <Exec Command="
+      set -e
+      destination=&quot;%(TargetingPackSrcRequiringConstraintPatch.DestinationFile)&quot;
+      mkdir -p &quot;${destination%/*}&quot;
+      sed &quot;s/ constraint)/ 'constraint')/g&quot; &quot;%(TargetingPackSrcRequiringConstraintPatch.FullPath)&quot; > &quot;$destination&quot;" />
+
+    <ItemGroup>
+      <TargetingPackSrc Include="@(TargetingPackSrcRequiringPatch->'%(DestinationFile)')" />
+    </ItemGroup>
+  </Target>
+
   <Target Name="BuildTargetingPackIlSrc"
-          DependsOnTargets="GetProjectSrc"
+          DependsOnTargets="PatchIl"
           Condition="'@(TargetingPackSrc)' != ''">
     <Message Importance="High" Text="[$([System.DateTime]::Now.ToString('HH:mm:ss.ff'))] Begin $(MSBuildProjectName) -> $(TFMPackTempOutputDir)..." />
     <MakeDir Directories="@(TargetingPackSrc->'$(TFMPackTempOutputDir)%(RecursiveDir)')" />

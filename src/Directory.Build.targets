@@ -2,26 +2,35 @@
 
   <Target Name="GetProjectSrc">
     <ItemGroup>
-      <TargetingPackSrc Include="$(MSBuildProjectDirectory)\**\*.il" />
-      <!-- Temporarily skip files with 'constraint' token that isn't compatible with current ilasm. -->
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Components.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Mvc.Cors.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Routing.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\netstandard.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\presentationframework.*.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.*.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\PresentationFramework.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Activities.Presentation.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.ComponentModel.Composition.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.Common.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.Entity.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Data.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Design.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Reflection.Metadata.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Web.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.Xml.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\System.XML.il" />
-      <TargetingPackSrc Remove="$(MSBuildProjectDirectory)\**\WindowsFormsIntegration.il" />
+      <!--
+        Files that need the 'constraint' token fixed before they can be assembled: they were
+        decompiled with a 3.1 ildasm not compatible with 5.0 ilasm.
+      -->
+      <TargetingPackSrcRequiringConstraintPatch
+        Include="
+          $(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Components.il;
+          $(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Mvc.Cors.il;
+          $(MSBuildProjectDirectory)\**\Microsoft.AspNetCore.Routing.il;
+          $(MSBuildProjectDirectory)\**\netstandard.il;
+          $(MSBuildProjectDirectory)\**\presentationframework.*.il;
+          $(MSBuildProjectDirectory)\**\PresentationFramework.*.il;
+          $(MSBuildProjectDirectory)\**\PresentationFramework.il;
+          $(MSBuildProjectDirectory)\**\System.Activities.Presentation.il;
+          $(MSBuildProjectDirectory)\**\System.ComponentModel.Composition.il;
+          $(MSBuildProjectDirectory)\**\System.Data.Common.il;
+          $(MSBuildProjectDirectory)\**\System.Data.Entity.il;
+          $(MSBuildProjectDirectory)\**\System.Data.il;
+          $(MSBuildProjectDirectory)\**\System.Design.il;
+          $(MSBuildProjectDirectory)\**\System.Reflection.Metadata.il;
+          $(MSBuildProjectDirectory)\**\System.Web.il;
+          $(MSBuildProjectDirectory)\**\System.Xml.il;
+          $(MSBuildProjectDirectory)\**\System.XML.il;
+          $(MSBuildProjectDirectory)\**\WindowsFormsIntegration.il" />
+
+      <!-- Find all IL. Leave out IL that needs to be patched before being built. -->
+      <TargetingPackSrc
+        Include="$(MSBuildProjectDirectory)\**\*.il"
+        Exclude="@(TargetingPackSrcRequiringConstraintPatch)" />
 
       <PotentialCompileSrc Include="**\*.cs" />
 
