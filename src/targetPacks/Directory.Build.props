@@ -4,9 +4,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
 
-    <IsPackable>true</IsPackable>
     <RestoreIlTooling>true</RestoreIlTooling>
 
     <!-- Disable NU5131: unclear warning caused by ref-only (https://github.com/NuGet/Home/issues/8684) -->

@@ -94,12 +94,15 @@
 
   <!--
     Instead of using the nuspec inside the directory, use the one that we copied to a temp
-    directory. Normally this would be done by setting the property. However, in this case, the
-    project file already sets it, which takes priority over Directory.Build.props, and we don't want
-    to modify the project files too much. This target is also a nice point to enforce that we do
-    actually have a nuspec.
+    directory. Normally this would be done by setting the NuspecFile property statically. However,
+    in this case, the project file already sets it to some other value, which takes priority over
+    Directory.Build.props. We also don't want to modify the project files too much, for branch
+    merging and general noise reduction.
+
+    This target is also a nice place to enforce that we do actually have a nuspec.
   -->
   <Target Name="SetManualPackTaskInputs"
+          Condition="'$(PackNuspecInPlace)' != 'true'"
           BeforeTargets="_CalculateInputsOutputsForPack;GenerateNuspec">
     <ItemGroup>
       <NuspecFile Include="*.nuspec" />
