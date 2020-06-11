@@ -4,7 +4,8 @@
           Condition="'@(TargetingPackSrcRequiringConstraintPatch)' != ''">
     <ItemGroup>
       <TargetingPackSrcRequiringConstraintPatch
-        DestinationFile="$(IntermediateOutputPath)%(RecursiveDir)%(Filename).patched%(Extension)" />
+        DestinationFile="$(IntermediateOutputPath)%(RecursiveDir)%(Filename).patched%(Extension)"
+        RelativeOutputAssemblyFile="%(RecursiveDir)%(Filename).dll" />
     </ItemGroup>
 
     <!-- Wrap constraint in single quotes in certain circumstances. -->
@@ -15,7 +16,8 @@
       sed &quot;s/ constraint)/ 'constraint')/g&quot; &quot;%(TargetingPackSrcRequiringConstraintPatch.FullPath)&quot; > &quot;$destination&quot;" />
 
     <ItemGroup>
-      <TargetingPackSrc Include="@(TargetingPackSrcRequiringConstraintPatch->'%(DestinationFile)')" />
+      <TargetingPackSrc
+        Include="@(TargetingPackSrcRequiringConstraintPatch->'%(DestinationFile)')" />
     </ItemGroup>
   </Target>
 
@@ -30,7 +32,7 @@
         Include="$(MSBuildProjectFullPath)"
         Properties="
           IlFile=%(TargetingPackSrc.Identity);
-          OutputFile=$(TFMPackTempOutputDir)%(TargetingPackSrc.RecursiveDir)%(TargetingPackSrc.Filename).dll" />
+          OutputFile=$(TFMPackTempOutputDir)%(TargetingPackSrc.RelativeOutputAssemblyFile)" />
     </ItemGroup>
 
     <MSBuild

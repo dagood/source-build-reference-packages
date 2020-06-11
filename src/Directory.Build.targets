@@ -34,6 +34,8 @@
       <TargetingPackSrc
         Include="$(MSBuildProjectDirectory)\**\*.il"
         Exclude="@(TargetingPackSrcRequiringConstraintPatch)" />
+      <TargetingPackSrc
+        RelativeOutputAssemblyFile="%(RecursiveDir)%(Filename).dll" />
 
       <PotentialCompileSrc Include="**\*.cs" />
 
@@ -47,6 +49,7 @@
         Include="**\*.*"
         Exclude="
           @(TargetingPackSrc);
+          @(TargetingPackSrcRequiringConstraintPatch);
           @(PotentialCompileSrc);
           **\*.csproj;
           @(NuGetGeneratedMetadataFile);
