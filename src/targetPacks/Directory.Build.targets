@@ -15,7 +15,7 @@
       sed &quot;s/ constraint)/ 'constraint')/g&quot; &quot;%(TargetingPackSrcRequiringConstraintPatch.FullPath)&quot; > &quot;$destination&quot;" />
 
     <ItemGroup>
-      <TargetingPackSrc Include="@(TargetingPackSrcRequiringPatch->'%(DestinationFile)')" />
+      <TargetingPackSrc Include="@(TargetingPackSrcRequiringConstraintPatch->'%(DestinationFile)')" />
     </ItemGroup>
   </Target>
 
