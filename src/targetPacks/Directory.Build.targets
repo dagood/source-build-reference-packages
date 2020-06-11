@@ -8,12 +8,18 @@
         RelativeOutputAssemblyFile="%(RecursiveDir)%(Filename).dll" />
     </ItemGroup>
 
-    <!-- Wrap constraint in single quotes in certain circumstances. -->
+    <!--
+      Wrap constraint in single quotes in certain circumstances to avoid using reserved token.
+      Function param:
+        " constraint," => " 'constraint',"
+        " constraint)" => " 'constraint')"
+        " constraint"(eol) => " 'constraint'"(eol) (%24 is $ escaped in hex)
+    -->
     <Exec Command="
       set -e
       destination=&quot;%(TargetingPackSrcRequiringConstraintPatch.DestinationFile)&quot;
       mkdir -p &quot;${destination%/*}&quot;
-      sed &quot;s/ constraint)/ 'constraint')/g&quot; &quot;%(TargetingPackSrcRequiringConstraintPatch.FullPath)&quot; > &quot;$destination&quot;" />
+      sed &quot;s/ constraint\(\([,)]\)\|%24\)/ 'constraint'\2/g&quot; &quot;%(TargetingPackSrcRequiringConstraintPatch.FullPath)&quot; > &quot;$destination&quot;" />
 
     <ItemGroup>
       <TargetingPackSrc
