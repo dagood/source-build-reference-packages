@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!--
+      Arcade defaults Serviceable to 'true'. Reset it, to use the value in the nuspec. Improves
+      equality with real packages.
+    -->
+    <Serviceable />
+  </PropertyGroup>
+
+  <PropertyGroup>
     <TFMPackTempOutputDir>$([MSBuild]::NormalizeDirectory('$(BaseOutputPath)', 'pack'))</TFMPackTempOutputDir>
   </PropertyGroup>
 
