@@ -1,31 +1,4 @@
 <Project>
 
-  <Target Name="WriteProperCasedPropsFile"
-          BeforeTargets="Build">
-    <PropertyGroup>
-      <CompileFilename>%(Compile.Filename)</CompileFilename>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(CompileFilename)' != ''">
-      <PropsFileContent><![CDATA[<Project>
-
-  <Import Project="%24([MSBuild]::GetPathOfFileAbove(Directory.Build.props, %24(MSBuildThisFileDirectory)..))" />
-
-  <PropertyGroup>
-    <AssemblyName>$(CompileFilename)</AssemblyName>
-  </PropertyGroup>
-
-</Project>
-]]></PropsFileContent>
-      <TargetPropsFile>$([MSBuild]::NormalizePath('$(MSBuildProjectDir)', '..', 'Directory.Build.props'))</TargetPropsFile>
-    </PropertyGroup>
-
-    <WriteLinesToFile
-      Condition="'$(CompileFilename)' != ''"
-      File="$(TargetPropsFile)"
-      Lines="$(PropsFileContent)"
-      Overwrite="true" />
-  </Target>
-
   <Import Project="$([MSBuild]::GetPathOfFileAbove(Directory.Build.targets, $(MSBuildThisFileDirectory)..))" />
 </Project>
